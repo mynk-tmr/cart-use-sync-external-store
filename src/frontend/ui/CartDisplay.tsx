@@ -40,7 +40,7 @@ function ShowCart() {
   const cart = useStore(Cart.Store);
   const total = cart.reduce((acc, item) => acc + item.price * item.count, 0);
   return (
-    <section className="bg-white text-black p-4 rounded absolute top-12 right-0 w-96">
+    <section className="bg-white text-black p-4 rounded absolute top-12 right-0 w-[90vw] max-w-96">
       {cart.length === 0 ? (
         <h3 className="font-medium text-center">Cart is Empty</h3>
       ) : (

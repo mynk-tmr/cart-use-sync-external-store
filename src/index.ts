@@ -12,3 +12,8 @@ serve({
 });
 
 console.log('Server started on http://localhost:3000');
+console.log('Enter "q" to quit');
+
+for await (const line of console) {
+  if (line.toLocaleLowerCase() === 'q') process.exit();
+}
