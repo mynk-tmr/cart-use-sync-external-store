@@ -1,4 +1,4 @@
-import { useState, useSyncExternalStore } from 'react';
+import { useRef, useSyncExternalStore } from 'react';
 
 export class Store<T> {
   subs = new Set<() => void>();
@@ -33,15 +33,15 @@ export function useStore<T>(store: Store<T>): Readonly<T> {
 export function useSlice<T, R>(
   store: Store<T>,
   selector: (state: T) => R,
-  eqFn = Object.is,
+  eqFn: (old: R, next: R) => boolean = Object.is,
 ): Readonly<R> {
-  const [slice, setSlice] = useState(() => selector(store.snapshot));
+  const slice = useRef(selector(store.snapshot));
   return useSyncExternalStore(
     (cb) => store.subscribe(cb),
     () => {
       const next = selector(store.snapshot);
-      if (!eqFn(slice, next)) setSlice(next);
-      return next;
+      if (!eqFn(slice.current, next)) slice.current = next;
+      return slice.current;
     },
   );
 }
